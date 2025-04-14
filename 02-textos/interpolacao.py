@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-
- 
 import os
 import sys
+import smtplib
+from email.mime.text import MIMEText
 
 arguments = sys.argv[1:]
 if not arguments:
@@ -18,19 +18,30 @@ path= os.curdir
 filepath = os.path.join(path, filename) # emails.txt
 templatepath = os.path.join(path, templatename) # email_tmpl.txt
 
-for line in open(filepath):
-    name, email = line.split(",") 
+with smtplib.SMTP(host="localhost", port=8025) as server:
 
-    print(f"enviando email para : {email}")
-    print(
-         open(templatepath).read() 
-         % {
-             "nome": name, 
-             "produto": "caneta", 
-             "texto": "Escrever muito bem", 
-             "link": "https://meusite.com", 
-             "quantidade": 5, 
-             "preco": 50.5,
+    for line in open(filepath):
+        name, email = line.split(",") 
+        text = (
+            open(templatepath).read() 
+            % {
+                 "nome": name, 
+                 "produto": "caneta", 
+                 "texto": "Escrever muito bem", 
+                 "link": "https://meusite.com", 
+                 "quantidade": 5, 
+                 "preco": 50.5,
             }
         )
-    print("-" * 50)
+
+        from_ = "brpeters23@gmail.com"
+        to = ", ".join([email])                
+        message = MIMEText(text)
+        message["Subject"] = "compre mais"
+        message["From"] = from_
+        message["To"] = to
+
+        server.sendmail(from_, to, message.as_string())
+                
+
+         
