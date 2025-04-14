@@ -34,7 +34,7 @@ with smtplib.SMTP(host="localhost", port=8025) as server:
             }
         )
 
-        from_ = "brpeters23@gmail.com"
+        from_ = "joaozinho@gmail.com"
         to = ", ".join([email])                
         message = MIMEText(text)
         message["Subject"] = "compre mais"
